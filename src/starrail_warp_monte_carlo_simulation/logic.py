@@ -1,0 +1,82 @@
+from enum import Enum
+import random
+
+class WarpResult(Enum):
+    S5_TGT = 0,
+    S5_BYPASS = 1,
+    S4_TGT = 2,
+    S4_BYPASS = 3,
+    S3 = 4,
+
+class SimulationLogic:
+    def __init__(self):
+        self.char_s5_warp_count = 0
+        self.char_s4_warp_count = 0
+        self.light_cone_s5_warp_count = 0
+        self.light_cone_s4_warp_count = 0
+        self.char_s5_astray = False
+        self.char_s4_astray = False
+        self.light_cone_s5_astray = False
+        self.light_cone_s4_astray = False
+        # 重置随机种子
+        random.seed()
+    
+    def char_warp(self) -> WarpResult:
+        self.char_s5_warp_count += 1
+        s5_random_probability = 6e-3
+        if self.char_s5_warp_count > 73:
+            s5_random_probability = 6e-3+(1-6e-3)*abs(self.char_s5_warp_count-73)/(90-73)
+        s4_random_probability = 5.1e-2
+        if self.char_s4_warp_count > 8:
+            s4_random_probability = 5.1e-2+(1-5.1e-2)*abs(self.char_s4_warp_count-8)/2
+        if random.random() < s5_random_probability:
+            # 此时角色有50%的概率歪，50%的概率不歪，如果此前抽到过歪，则本次一定不会歪
+            if self.char_s5_astray or random.random() < 0.5:
+                self.char_s5_astray = False
+                self.char_s5_warp_count = 0
+                return WarpResult.S5_TGT
+            else:
+                self.char_s5_astray = True
+                self.char_s5_warp_count = 0
+                return WarpResult.S5_BYPASS
+        elif random.random() < s4_random_probability:
+            if self.char_s4_astray or random.random() < 0.5:
+                self.char_s4_astray = False
+                self.char_s4_warp_count = 0
+                return WarpResult.S4_TGT
+            else:
+                self.char_s4_astray = True
+                self.char_s4_warp_count = 0
+                return WarpResult.S4_BYPASS
+        else:
+            return WarpResult.S3
+    
+    def light_cone_warp(self) -> WarpResult:
+        self.light_cone_s5_warp_count += 1
+        s5_random_probability = 6e-3
+        if self.light_cone_s5_warp_count > 73:
+            s5_random_probability = 6e-3+(1-6e-3)*abs(self.light_cone_s5_warp_count-73)/(90-73)
+        s4_random_probability = 5.1e-2
+        if self.light_cone_s4_warp_count > 8:
+            s4_random_probability = 5.1e-2+(1-5.1e-2)*abs(self.light_cone_s4_warp_count-8)/2
+        if random.random() < s5_random_probability:
+            # 此时光锥有25%的概率歪，75%的概率不歪，如果此前抽到过歪，则本次一定不会歪
+            if self.light_cone_s5_astray or random.random() < 0.75:
+                self.light_cone_s5_astray = False
+                self.light_cone_s5_warp_count = 0
+                return WarpResult.S5_TGT
+            else:
+                self.light_cone_s5_astray = True
+                self.light_cone_s5_warp_count = 0
+                return WarpResult.S5_BYPASS
+        elif random.random() < s4_random_probability:
+            if self.light_cone_s4_astray or random.random() < 0.75:
+                self.light_cone_s4_astray = False
+                self.light_cone_s4_warp_count = 0
+                return WarpResult.S4_TGT
+            else:
+                self.light_cone_s4_astray = True
+                self.light_cone_s4_warp_count = 0
+                return WarpResult.S4_BYPASS
+        else:
+            return WarpResult.S3

@@ -1,0 +1,7 @@
+[common]
+max_threads = 10 # 最大线程数
+simulation_samples = 5000 # 模拟样本数
+
+[warp_config]
+s4_char_count = 22 # 四星角色数量，用于计算星芒计数
+s4_light_cone_count = 31 # 四星光锥数量，用于计算星芒计数

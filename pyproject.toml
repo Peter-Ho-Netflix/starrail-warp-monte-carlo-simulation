@@ -1,0 +1,24 @@
+[project]
+name = "starrail-warp-monte-carlo-simulation"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Peter-Ho-Netflix",email = "diannaobingdukb@aliyun.com"}
+]
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "matplotlib (>=3.11.2,<4.0.0)",
+    "numpy (>=2.5.4,<3.0.0)",
+    "tqdm (>=4.70.1,<5.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "starrail_warp_monte_carlo_simulation", from = "src"}]
+
+[tool.poetry.scripts]
+monte-carlo = "starrail_warp_monte_carlo_simulation.main:main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
