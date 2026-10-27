@@ -23,6 +23,7 @@ class SimulationLogic:
     
     def char_warp(self) -> WarpResult:
         self.char_s5_warp_count += 1
+        self.char_s4_warp_count += 1
         s5_random_probability = 6e-3
         if self.char_s5_warp_count > 73:
             s5_random_probability = 6e-3+(1-6e-3)*abs(self.char_s5_warp_count-73)/(90-73)
@@ -53,12 +54,12 @@ class SimulationLogic:
     
     def light_cone_warp(self) -> WarpResult:
         self.light_cone_s5_warp_count += 1
-        s5_random_probability = 6e-3
-        if self.light_cone_s5_warp_count > 73:
-            s5_random_probability = 6e-3+(1-6e-3)*abs(self.light_cone_s5_warp_count-73)/(90-73)
-        s4_random_probability = 5.1e-2
+        s5_random_probability = 8e-3
+        if self.light_cone_s5_warp_count > 59:
+            s5_random_probability = 8e-3+(1-8e-3)*abs(self.light_cone_s5_warp_count-65)/(80-65)
+        s4_random_probability = 6.6e-2
         if self.light_cone_s4_warp_count > 8:
-            s4_random_probability = 5.1e-2+(1-5.1e-2)*abs(self.light_cone_s4_warp_count-8)/2
+            s4_random_probability = 6.6e-2+(1-6.6e-2)*abs(self.light_cone_s4_warp_count-7)/2
         if random.random() < s5_random_probability:
             # 此时光锥有25%的概率歪，75%的概率不歪，如果此前抽到过歪，则本次一定不会歪
             if self.light_cone_s5_astray or random.random() < 0.75:
@@ -80,3 +81,24 @@ class SimulationLogic:
                 return WarpResult.S4_BYPASS
         else:
             return WarpResult.S3
+
+class SimulationProcess:
+    def __init__(self):
+        self.simulation_logic = SimulationLogic()
+    
+    def run(self, s5_char_tgt_count: int, s5_light_cone_tgt_count: int) -> int:
+        # 顺序执行所有抽卡，直到抽到目标角色数量
+        current_s5_tgt_char_count = 0
+        current_s5_tgt_light_cone_count = 0
+        total_warp_count = 0
+        while current_s5_tgt_char_count < s5_char_tgt_count:
+            total_warp_count += 1
+            result = self.simulation_logic.char_warp()
+            if result == WarpResult.S5_TGT:
+                current_s5_tgt_char_count += 1
+        while current_s5_tgt_light_cone_count < s5_light_cone_tgt_count:
+            total_warp_count += 1
+            result = self.simulation_logic.light_cone_warp()
+            if result == WarpResult.S5_TGT:
+                current_s5_tgt_light_cone_count += 1
+        return total_warp_count

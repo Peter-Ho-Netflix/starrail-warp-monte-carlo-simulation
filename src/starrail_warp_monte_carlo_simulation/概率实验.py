@@ -1,4 +1,4 @@
-base, hard, soft_from = 0.006, 90, 74
+base, hard, soft_from = 0.066, 10, 7
 def p_at(n: int) -> float:
     if n <= soft_from:
         return base
