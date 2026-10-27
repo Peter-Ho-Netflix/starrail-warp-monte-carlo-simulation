@@ -9,17 +9,19 @@ class WarpResult(Enum):
     S3 = 4,
 
 class SimulationLogic:
-    def __init__(self):
-        self.char_s5_warp_count = 0
-        self.char_s4_warp_count = 0
-        self.light_cone_s5_warp_count = 0
-        self.light_cone_s4_warp_count = 0
-        self.char_s5_astray = False
-        self.char_s4_astray = False
-        self.light_cone_s5_astray = False
-        self.light_cone_s4_astray = False
-        # 重置随机种子
-        random.seed()
+    def __init__(self, 
+    initial_char_s5_warp_count: int = 0, initial_char_s4_warp_count: int = 0, 
+    initial_light_cone_s5_warp_count: int = 0, initial_light_cone_s4_warp_count: int = 0,
+    initial_char_s5_astray: bool = False, initial_char_s4_astray: bool = False,
+    initial_light_cone_s5_astray: bool = False, initial_light_cone_s4_astray: bool = False):
+        self.char_s5_warp_count = initial_char_s5_warp_count
+        self.char_s4_warp_count = initial_char_s4_warp_count
+        self.light_cone_s5_warp_count = initial_light_cone_s5_warp_count
+        self.light_cone_s4_warp_count = initial_light_cone_s4_warp_count
+        self.char_s5_astray = initial_char_s5_astray
+        self.char_s4_astray = initial_char_s4_astray
+        self.light_cone_s5_astray = initial_light_cone_s5_astray
+        self.light_cone_s4_astray = initial_light_cone_s4_astray
     
     def char_warp(self) -> WarpResult:
         self.char_s5_warp_count += 1
