@@ -89,16 +89,34 @@ class SimulationProcess:
     def run(self, s5_char_tgt_count: int, s5_light_cone_tgt_count: int) -> int:
         # 顺序执行所有抽卡，直到抽到目标角色数量
         current_s5_tgt_char_count = 0
+        current_s5_bypass_char_count = 0
+        current_s4_char_count = 0
         current_s5_tgt_light_cone_count = 0
+        current_s5_bypass_light_cone_count = 0
+        current_s4_light_cone_count = 0
         total_warp_count = 0
         while current_s5_tgt_char_count < s5_char_tgt_count:
             total_warp_count += 1
             result = self.simulation_logic.char_warp()
             if result == WarpResult.S5_TGT:
                 current_s5_tgt_char_count += 1
+                # print(f"第{total_warp_count}抽抽到限定5星角色")
+            elif result == WarpResult.S5_BYPASS:
+                current_s5_bypass_char_count += 1
+                # print(f"第{total_warp_count}抽抽到非限定5星角色")
+            elif result == WarpResult.S4_TGT or result == WarpResult.S4_BYPASS:
+                current_s4_char_count += 1
+                # print(f"第{total_warp_count}抽抽到4星角色")
         while current_s5_tgt_light_cone_count < s5_light_cone_tgt_count:
             total_warp_count += 1
             result = self.simulation_logic.light_cone_warp()
             if result == WarpResult.S5_TGT:
                 current_s5_tgt_light_cone_count += 1
+                # print(f"第{total_warp_count}抽抽到限定5星光锥")
+            elif result == WarpResult.S5_BYPASS:
+                current_s5_bypass_light_cone_count += 1
+                # print(f"第{total_warp_count}抽抽到非限定5星光锥")
+            elif result == WarpResult.S4_TGT or result == WarpResult.S4_BYPASS:
+                current_s4_light_cone_count += 1
+                # print(f"第{total_warp_count}抽抽到4星光锥")
         return total_warp_count

@@ -1,6 +1,7 @@
 [common]
-max_threads = 10 # 最大线程数
-simulation_samples = 5000 # 模拟样本数
+max_threads = 32 # 最大线程数
+simulation_samples = 100000 # 模拟样本数
+chunk_size = 100 # 每个线程处理的样本数，用于控制每个线程处理的样本数量，避免单个线程处理过多样本导致内存占用过高
 
 [warp_config]
 s4_char_count = 22 # 四星角色数量，用于计算星芒计数
