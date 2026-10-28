@@ -31,11 +31,14 @@ def main():
     # print(f"抽到目标角色和光锥所需的总抽卡次数：{total_warp_count}")
 
     warp_counts = process_map(run_simulation, [char_count] * simulation_samples, [light_cone_count] * simulation_samples, max_workers=max_threads, chunksize=chunk_size)
-    plt.hist(warp_counts, bins=range(min(warp_counts), max(warp_counts) + 1), edgecolor='black')
+    plt.figure()
+    plt.hist(warp_counts, bins=range(min(warp_counts), max(warp_counts) + 1))
+    plt.figure()
     print(f"最坏情况抽卡次数：{max(warp_counts)}")
     print(f"抽卡次数众数：{mode(warp_counts)}")
     print(f"抽卡次数平均值：{mean(warp_counts)}")
     print(f"抽卡次数中位数：{median(warp_counts)}")
+    plt.hist(warp_counts, bins=range(min(warp_counts), max(warp_counts) + 1), density=True, cumulative=True, edgecolor='violet')
     plt.show()
 
 if __name__ == "__main__":

@@ -89,7 +89,16 @@ class SimulationProcess:
         self.simulation_logic = SimulationLogic()
     
     def run(self, s5_char_tgt_count: int, s5_light_cone_tgt_count: int) -> int:
-        # 顺序执行所有抽卡，直到抽到目标角色数量
+        '''
+        顺序执行所有抽卡，直到抽到目标角色数量
+
+        Args:
+            s5_char_tgt_count: 目标5星角色数量
+            s5_light_cone_tgt_count: 目标5星光锥数量
+
+        Returns:
+            total_warp_count: 所需抽卡次数
+        '''
         current_s5_tgt_char_count = 0
         current_s5_bypass_char_count = 0
         current_s4_char_count = 0
