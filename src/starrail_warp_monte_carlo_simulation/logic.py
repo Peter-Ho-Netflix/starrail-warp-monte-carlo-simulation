@@ -84,50 +84,58 @@ class SimulationLogic:
         else:
             return WarpResult.S3
 
-class SimulationProcess:
-    def __init__(self):
-        self.simulation_logic = SimulationLogic()
     
-    def run(self, s5_char_tgt_count: int, s5_light_cone_tgt_count: int) -> int:
-        '''
-        顺序执行所有抽卡，直到抽到目标角色数量
+def run(simulation_logic: SimulationLogic, s5_char_tgt_count: int, s5_light_cone_tgt_count: int) -> tuple[int, int]:
+    '''
+    顺序执行所有抽卡，直到抽到目标角色数量
 
-        Args:
-            s5_char_tgt_count: 目标5星角色数量
-            s5_light_cone_tgt_count: 目标5星光锥数量
+    Args:
+        simulation_logic: 模拟逻辑类
+        s5_char_tgt_count: 目标5星角色数量
+        s5_light_cone_tgt_count: 目标5星光锥数量
 
-        Returns:
-            total_warp_count: 所需抽卡次数
-        '''
-        current_s5_tgt_char_count = 0
-        current_s5_bypass_char_count = 0
-        current_s4_char_count = 0
-        current_s5_tgt_light_cone_count = 0
-        current_s5_bypass_light_cone_count = 0
-        current_s4_light_cone_count = 0
-        total_warp_count = 0
-        while current_s5_tgt_char_count < s5_char_tgt_count:
-            total_warp_count += 1
-            result = self.simulation_logic.char_warp()
-            if result == WarpResult.S5_TGT:
-                current_s5_tgt_char_count += 1
-                # print(f"第{total_warp_count}抽抽到限定5星角色")
-            elif result == WarpResult.S5_BYPASS:
-                current_s5_bypass_char_count += 1
-                # print(f"第{total_warp_count}抽抽到非限定5星角色")
-            elif result == WarpResult.S4_TGT or result == WarpResult.S4_BYPASS:
-                current_s4_char_count += 1
-                # print(f"第{total_warp_count}抽抽到4星角色")
-        while current_s5_tgt_light_cone_count < s5_light_cone_tgt_count:
-            total_warp_count += 1
-            result = self.simulation_logic.light_cone_warp()
-            if result == WarpResult.S5_TGT:
-                current_s5_tgt_light_cone_count += 1
-                # print(f"第{total_warp_count}抽抽到限定5星光锥")
-            elif result == WarpResult.S5_BYPASS:
-                current_s5_bypass_light_cone_count += 1
-                # print(f"第{total_warp_count}抽抽到非限定5星光锥")
-            elif result == WarpResult.S4_TGT or result == WarpResult.S4_BYPASS:
-                current_s4_light_cone_count += 1
-                # print(f"第{total_warp_count}抽抽到4星光锥")
-        return total_warp_count
+    Returns:
+        total_warp_count: 所需抽卡次数
+        total_resources_count: 所需资源次数
+    '''
+    current_s5_tgt_char_count = 0
+    current_s5_bypass_char_count = 0
+    current_s4_char_count = 0
+    current_s5_tgt_light_cone_count = 0
+    current_s5_bypass_light_cone_count = 0
+    current_s4_light_cone_count = 0
+    total_warp_count = 0
+    undying_starlight_count = 0  # 每20星芒可以兑换1抽，用于资源计数
+    total_resources_count = 0
+    while current_s5_tgt_char_count < s5_char_tgt_count:
+        total_warp_count += 1
+        result = simulation_logic.char_warp()
+        if result == WarpResult.S5_TGT:
+            current_s5_tgt_char_count += 1
+            # print(f"第{total_warp_count}抽抽到限定5星角色")
+            undying_starlight_count += 40
+        elif result == WarpResult.S5_BYPASS:
+            current_s5_bypass_char_count += 1
+            # print(f"第{total_warp_count}抽抽到非限定5星角色")
+            undying_starlight_count += 40
+        elif result == WarpResult.S4_TGT or result == WarpResult.S4_BYPASS:
+            current_s4_char_count += 1
+            # print(f"第{total_warp_count}抽抽到4星角色")
+            undying_starlight_count += 8
+    while current_s5_tgt_light_cone_count < s5_light_cone_tgt_count:
+        total_warp_count += 1
+        result = simulation_logic.light_cone_warp()
+        if result == WarpResult.S5_TGT:
+            current_s5_tgt_light_cone_count += 1
+            # print(f"第{total_warp_count}抽抽到限定5星光锥")
+            undying_starlight_count += 40
+        elif result == WarpResult.S5_BYPASS:
+            current_s5_bypass_light_cone_count += 1
+            # print(f"第{total_warp_count}抽抽到非限定5星光锥")
+            undying_starlight_count += 40
+        elif result == WarpResult.S4_TGT or result == WarpResult.S4_BYPASS:
+            current_s4_light_cone_count += 1
+            # print(f"第{total_warp_count}抽抽到4星光锥")
+            undying_starlight_count += 8
+    total_resources_count = total_warp_count - undying_starlight_count // 20
+    return total_warp_count, total_resources_count
