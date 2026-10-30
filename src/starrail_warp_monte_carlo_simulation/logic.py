@@ -85,18 +85,18 @@ class SimulationLogic:
             return WarpResult.S3
 
     
-def run(simulation_logic: SimulationLogic, s5_char_tgt_count: int, s5_light_cone_tgt_count: int) -> tuple[int, int]:
+def run(simulation_logic: SimulationLogic, s5_char_tgt_count: int, s5_light_cone_tgt_count: int, s4_char_eidolon_list: list[int] | None = None) -> tuple[int, int]:
     '''
-    顺序执行所有抽卡，直到抽到目标角色数量
+    顺序执行所有抽卡，直到抽到目标角色数量和目标光锥数量
 
     Args:
-        simulation_logic: 模拟逻辑类
-        s5_char_tgt_count: 目标5星角色数量
-        s5_light_cone_tgt_count: 目标5星光锥数量
+        simulation_logic (SimulationLogic): 模拟逻辑类，用于执行抽卡逻辑
+        s5_char_tgt_count (int): 目标5星角色数量
+        s5_light_cone_tgt_count (int): 目标5星光锥数量
+        s4_char_eidolon_list (list[int]): 目标4星角色星魂列表，前三个为当前UP角色，具备保底机制
 
     Returns:
-        total_warp_count: 所需抽卡次数
-        total_resources_count: 所需资源次数
+        tuple[int, int]: 所需抽卡次数和所需资源次数
     '''
     current_s5_tgt_char_count = 0
     current_s5_bypass_char_count = 0
