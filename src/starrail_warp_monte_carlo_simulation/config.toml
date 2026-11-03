@@ -6,3 +6,13 @@ chunk_size = 1 # 每个线程处理的样本数，用于控制每个线程处理
 [warp_config]
 s4_char_count = 22 # 四星角色数量，用于计算星芒计数
 s4_light_cone_count = 31 # 四星光锥数量，用于计算星芒计数
+
+[firefly_sp_config]
+s4_char_owner_count_list = [7, 7, 7, 3, 2, 6, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7] # 四星角色已拥有数量列表
+s5_char_owner_count_list = [0, 4, 1, 4, 0, 2, 2, 2] # 五星角色已拥有数量列表
+s5_char_tgt_count = 7 # 抽流萤sp目标5星角色数量
+s5_light_cone_tgt_count = 5 # 抽流萤sp目标5星光锥数量
+s5_char_pity_count = 1 # 5星角色保底次数
+s5_light_cone_pity_count = 6 # 5星光锥保底次数
+s4_char_pity_count = 0 # 4星角色保底次数
+s4_light_cone_pity_count = 7 # 4星光锥保底次数

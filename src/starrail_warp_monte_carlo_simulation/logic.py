@@ -1,3 +1,5 @@
+import copy
+from dataclasses import dataclass
 from enum import Enum
 import random
 import tomllib
@@ -93,6 +95,22 @@ def normalize_list(list: list[int] | None, count: int) -> list[int]:
         result[:n] = list[:n]
     return result
 
+@dataclass
+class SimulationResult:
+    '''
+    模拟结果
+
+    Attributes:
+        total_warp_count (int): 总抽卡次数
+        total_resources_count (int): 总所需资源次数
+        s4_char_eidolon_list (list[int]): 四星角色已拥有数量列表
+        s5_char_eidolon_list (list[int]): 五星角色已拥有数量列表
+    '''
+    total_warp_count: int
+    total_resources_count: int
+    s4_char_eidolon_list: list[int]
+    s5_char_eidolon_list: list[int]
+
 def run(
     s5_char_tgt_count: int, 
     s5_light_cone_tgt_count: int, 
@@ -105,7 +123,7 @@ def run(
     s4_char_astray: bool = False,
     s4_light_cone_astray: bool = False,
     s4_char_eidolon_list: list[int] | None = None, 
-    s5_char_eidolon_list: list[int] | None = None) -> tuple[int, int]:
+    s5_char_eidolon_list: list[int] | None = None) -> SimulationResult:
     '''
     顺序执行所有抽卡，直到抽到目标角色数量和目标光锥数量
     
@@ -132,7 +150,7 @@ def run(
         s5_char_eidolon_list (list[int]): 五星角色已拥有数量。第一项是本期 UP 角色，这项适用五星大保底。
 
     Returns:
-        tuple[int, int]: 所需抽卡次数和所需资源次数
+        SimulationResult: 模拟结果
     '''
     simulation_logic = SimulationLogic(
         initial_char_s5_warp_count=s5_char_pity_count,
@@ -242,4 +260,9 @@ def run(
             undying_starlight_count += 8
             # print(f"当前已获得星芒数量：{undying_starlight_count}")
     total_resources_count = total_warp_count - undying_starlight_count // 20
-    return total_warp_count, total_resources_count
+    return SimulationResult(
+        total_warp_count=total_warp_count,
+        total_resources_count=total_resources_count,
+        s4_char_eidolon_list=copy.copy(s4_char_eidolon_list),
+        s5_char_eidolon_list=copy.copy(s5_char_eidolon_list),
+    )

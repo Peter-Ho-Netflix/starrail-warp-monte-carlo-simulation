@@ -28,8 +28,8 @@ def main():
     # print(f"抽到目标角色和光锥所需的总抽卡次数和所需资源数量：{total_warp_count}")
 
     data_list = process_map(run, [char_count] * simulation_samples, [light_cone_count] * simulation_samples, max_workers=max_threads, chunksize=chunk_size)
-    warp_counts = [data[0] for data in data_list]
-    resources_counts = [data[1] for data in data_list]
+    warp_counts = [data.total_warp_count for data in data_list]
+    resources_counts = [data.total_resources_count for data in data_list]
     plt.figure()
     plt.rcParams["font.sans-serif"] = ["Microsoft Yahei UI"]
     plt.rcParams["axes.unicode_minus"] = False
@@ -44,7 +44,7 @@ def main():
     plt.figure()
     plt.rcParams["font.sans-serif"] = ["Microsoft Yahei UI"]
     plt.rcParams["axes.unicode_minus"] = False
-    plt.hist(resources_counts, bins=range(min(resources_counts), max(resources_counts) + 1), density=True, cumulative=True, edgecolor='violet')
+    plt.ecdf(resources_counts, color='violet', label='所需资源数量概率分布曲线（按专票计算）')
     plt.xlabel("所需资源数量")
     plt.ylabel("概率")
     plt.title("所需资源数量概率分布曲线（按专票计算）")

@@ -17,6 +17,7 @@ packages = [{include = "starrail_warp_monte_carlo_simulation", from = "src"}]
 
 [tool.poetry.scripts]
 monte-carlo = "starrail_warp_monte_carlo_simulation.main:main"
+firefly-sp = "starrail_warp_monte_carlo_simulation.模拟程序.流萤sp:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
