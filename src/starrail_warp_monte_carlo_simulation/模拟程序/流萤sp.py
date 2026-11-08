@@ -67,18 +67,21 @@ def main():
     print("================================================")
     print("欢迎使用崩坏星穹铁道抽卡蒙特卡洛模拟-流萤sp抽卡计算子程序")
     print("================================================")
-    config_path = Path(__file__).parent.with_name("config.toml")
-    with config_path.open("rb") as f:
-        config = tomllib.load(f)
+    shared_path = Path(__file__).resolve().parent.parent / "config.toml"
+    scenario_path = Path(__file__).with_name("config.toml")
+    with shared_path.open("rb") as f:
+        shared_config = tomllib.load(f)
+    with scenario_path.open("rb") as f:
+        scenario_config = tomllib.load(f)
     simulation_result = process_map(run_pair, 
-        [config["firefly_sp_config"]["s5_char_pity_count"]] * config["common"]["simulation_samples"], 
-        [config["firefly_sp_config"]["s5_light_cone_pity_count"]] * config["common"]["simulation_samples"], 
-        [config["firefly_sp_config"]["s4_char_pity_count"]] * config["common"]["simulation_samples"], 
-        [config["firefly_sp_config"]["s4_light_cone_pity_count"]] * config["common"]["simulation_samples"], 
-        [config["firefly_sp_config"]["s4_char_owner_count_list"]] * config["common"]["simulation_samples"], 
-        [config["firefly_sp_config"]["s5_char_owner_count_list"]] * config["common"]["simulation_samples"], 
-        max_workers=config["common"]["max_threads"], 
-        chunksize=config["common"]["chunk_size"])
+        [scenario_config["firefly_sp_config"]["s5_char_pity_count"]] * shared_config["common"]["simulation_samples"], 
+        [scenario_config["firefly_sp_config"]["s5_light_cone_pity_count"]] * shared_config["common"]["simulation_samples"], 
+        [scenario_config["firefly_sp_config"]["s4_char_pity_count"]] * shared_config["common"]["simulation_samples"], 
+        [scenario_config["firefly_sp_config"]["s4_light_cone_pity_count"]] * shared_config["common"]["simulation_samples"], 
+        [scenario_config["firefly_sp_config"]["s4_char_owner_count_list"]] * shared_config["common"]["simulation_samples"], 
+        [scenario_config["firefly_sp_config"]["s5_char_owner_count_list"]] * shared_config["common"]["simulation_samples"], 
+        max_workers=shared_config["common"]["max_threads"], 
+        chunksize=shared_config["common"]["chunk_size"])
     firefly_only_warp_counts = [result.firefly_only_warp_count for result in simulation_result]
     firefly_only_resources_counts = [result.firefly_only_resources_count for result in simulation_result]
     firefly_with_nihilux_warp_counts = [result.firefly_with_nihilux_warp_count for result in simulation_result]
